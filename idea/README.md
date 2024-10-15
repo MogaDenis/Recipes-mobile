@@ -46,8 +46,17 @@ The main entity is the listing, which has the following fields:
 - When the user deletes a car listing, the request is made to the server where it is removed, but fetching all listings again is not allowed (the listing is deleted from the local dataset).
 
 ### Offline Access
-
+ 
 - CREATE - The new listing is saved locally as a draft so the user can post it again when they are online.
 - READ - The latest version of the data is saved locally, so when the user is offline, they can browse the listing which were stored on the device.
 - UPDATE - Similar to the CREATE scenario, the new details are saved as a draft so the user can submit the changes when they are back online.
 - DELETE - Deleting a listing while offline does not affect either the local memory nor the server when the user comes back online.
+
+### Screenshots
+
+
+
+
+Browsing cars for sale     |  Create a new listing
+:-------------------------:|:-------------------------:
+![](./browse_cars.png)     |  ![](./create_listing.png)
