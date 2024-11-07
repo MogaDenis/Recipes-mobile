@@ -1,6 +1,5 @@
 package com.example.marketplace.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,7 +8,6 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.example.marketplace.constants.Colors
 
@@ -20,19 +18,32 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
-    background = Colors.backgroundColor
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = Colors.darkGray,            // Dark Gray for key buttons or app bars
+    onPrimary = Colors.white,           // White for text/icons on primary areas
+    primaryContainer = Colors.lightGray,    // Light Gray for backgrounds of primary elements (e.g., cards)
+    onPrimaryContainer = Colors.darkGray,  // Dark Gray text/icons on primaryContainer
+
+    secondary = Colors.mediumGray,           // Medium Gray for secondary buttons or icons
+    onSecondary = Colors.white,         // White text/icons on secondary elements
+    secondaryContainer = Colors.extraLightGray,  // Lighter Gray for secondary backgrounds (like text fields)
+    onSecondaryContainer = Colors.darkGray,// Dark Gray text/icons on secondaryContainer
+
+    background = Colors.white,          // Light Gray for the app’s general background
+    onBackground = Colors.darkGray,        // Dark Gray for text on the background
+
+    surface = Colors.white,             // White for card backgrounds or surfaces
+    onSurface = Colors.darkGray,           // Dark Gray for text/icons on surfaces
+
+    surfaceVariant = Colors.extraLightGray,      // Light Gray variant for surface backgrounds
+    onSurfaceVariant = Colors.darkGray,    // Dark Gray text on surfaceVariant
+
+    error = Colors.red,               // Red for error messages
+    onError = Colors.white,             // White for text/icons on error surfaces
+    errorContainer = Colors.lightRed,      // Light Red for error backgrounds
+    onErrorContainer = Colors.red,    // Dark Red for text on errorContainer
+
+    outline = Colors.lightGray,             // Light Gray for borders or outlines
+    surfaceTint = Colors.darkGray
 )
 
 @Composable

@@ -37,7 +37,7 @@ fun MarketplaceBottomAppBar(navController: NavController) {
     modifier = Modifier
         .navigationBarsPadding()
         .height(50.dp),
-    containerColor = Colors.lightGrey
+    containerColor = Colors.lightGray
     ) {
         Row(
             modifier = Modifier
@@ -46,7 +46,7 @@ fun MarketplaceBottomAppBar(navController: NavController) {
         ) {
             TextButton(
                 onClick = {
-
+                    // TODO
                 }
             ) {
                 Icon(
@@ -55,7 +55,7 @@ fun MarketplaceBottomAppBar(navController: NavController) {
                 )
             }
 
-            if (currentRoute.value == null || currentRoute.value != "add_listing") {
+            if (currentRoute.value == null || currentRoute.value == "listings_list") {
                 TextButton(
                     onClick = {
                         navController.navigate("add_listing")
@@ -70,7 +70,7 @@ fun MarketplaceBottomAppBar(navController: NavController) {
             else {
                 TextButton(
                     onClick = {
-                        navController.navigate("listing_list")
+                        navController.navigate("listings_list")
                     }
                 ) {
                     Icon(
@@ -82,7 +82,7 @@ fun MarketplaceBottomAppBar(navController: NavController) {
 
             TextButton(
                 onClick = {
-
+                    // TODO
                 }
             ) {
                 Icon(

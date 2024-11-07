@@ -12,11 +12,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> DropdownMenuComponent(value: T, options: List<T>, label: String, onChange: (T) -> Unit, dropDownModifier: Modifier = Modifier, textFieldModifier: Modifier = Modifier) {
+fun <T> DropdownMenuComponent(
+    value: T, options: List<T>,
+    label: String,
+    onChange: (T) -> Unit,
+    dropDownModifier: Modifier = Modifier,
+    textFieldModifier: Modifier = Modifier,
+    isError: Boolean = false
+) {
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
@@ -37,7 +43,8 @@ fun <T> DropdownMenuComponent(value: T, options: List<T>, label: String, onChang
                 )
             },
             modifier = textFieldModifier
-                .menuAnchor()
+                .menuAnchor(),
+            isError = isError
         )
 
         // Dropdown menu

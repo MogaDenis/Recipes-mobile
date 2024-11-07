@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.AlertDialog
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -51,7 +52,8 @@ import com.example.marketplace.models.Listing
 import com.example.marketplace.view_models.ListingViewModel
 
 @Composable
-fun AddListingComponent(
+fun EditListingComponent(
+    listingId: Int?,
     viewModel: ListingViewModel,
     modifier: Modifier,
     navController: NavController
@@ -59,26 +61,17 @@ fun AddListingComponent(
     val attemptedSubmit = remember { mutableStateOf(false) }
     val validationErrorDialogOpened = remember { mutableStateOf(false) }
     val discardChangesDialogOpened = remember { mutableStateOf(false) }
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val updateDialogOpened = remember { mutableStateOf(false) }
+
+    if (listingId == null) {
+        return
+    }
+
+    val listing = viewModel.getListing(listingId) ?: return
 
     val scrollState = rememberScrollState()
 
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var price by remember { mutableIntStateOf(0) }
-    var condition by remember { mutableStateOf(Condition.New.toString()) }
-    var brand by remember { mutableStateOf("") }
-    var model by remember { mutableStateOf("") }
-    var fuelType by remember { mutableStateOf(FuelType.Diesel.toString()) }
-    var bodyStyle by remember { mutableStateOf(BodyStyle.Sedan.toString()) }
-    var colour by remember { mutableStateOf("") }
-    var manufactureYear by remember { mutableIntStateOf(2000) }
-    var mileage by remember { mutableIntStateOf(0) }
-    var emissionStandard by remember { mutableStateOf(EmissionStandard.Non_euro.toString()) }
-
-    val defaultModifier: Modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp)
+    var imageUri by remember { mutableStateOf(listing.imageUri) }
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -87,13 +80,30 @@ fun AddListingComponent(
         }
     )
 
+    var title by remember { mutableStateOf(listing.title) }
+    var description by remember { mutableStateOf(listing.description) }
+    var price by remember { mutableIntStateOf(listing.price) }
+    var condition by remember { mutableStateOf(listing.condition.toString()) }
+    var brand by remember { mutableStateOf(listing.brand) }
+    var model by remember { mutableStateOf(listing.model) }
+    var fuelType by remember { mutableStateOf(listing.fuelType.toString()) }
+    var bodyStyle by remember { mutableStateOf(listing.bodyStyle.toString()) }
+    var colour by remember { mutableStateOf(listing.colour) }
+    var manufactureYear by remember { mutableIntStateOf(listing.manufactureYear) }
+    var mileage by remember { mutableIntStateOf(listing.mileage) }
+    var emissionStandard by remember { mutableStateOf(listing.emissionStandard.toString()) }
+
+    val defaultModifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)
+
     Column(
         modifier = modifier
             .verticalScroll(scrollState)
     ) {
         Text(
             modifier = defaultModifier,
-            text = "Create a new listing",
+            text = "Edit the listing",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -138,7 +148,7 @@ fun AddListingComponent(
                             onClick = {
                                 discardChangesDialogOpened.value = false
 
-                                navController.navigate("listings_list")
+                                navController.popBackStack()
                             }
                         ) {
                             Text("Discard")
@@ -149,6 +159,62 @@ fun AddListingComponent(
                             colors = ButtonDefaults.buttonColors(Colors.mediumGray),
                             onClick = {
                                 discardChangesDialogOpened.value = false
+                            }
+                        ) {
+                            Text("Cancel")
+                        }
+                    }
+                )
+            }
+        }
+
+        when {
+            updateDialogOpened.value -> {
+                AlertDialog(
+                    title = {
+                        Text("Update confirmation")
+                    },
+                    text = {
+                        Text("Are you sure you want to apply the changes to this listing?")
+                    },
+                    onDismissRequest = {
+                        updateDialogOpened.value = false
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                updateDialogOpened.value = false
+
+                                val newListing = Listing(
+                                    listingId = listing.listingId,
+                                    title = title,
+                                    description = description,
+                                    price = price,
+                                    condition = Condition.valueOf(condition),
+                                    brand = brand,
+                                    model = model,
+                                    fuelType = FuelType.valueOf(fuelType),
+                                    bodyStyle = BodyStyle.valueOf(bodyStyle),
+                                    colour = colour,
+                                    manufactureYear = manufactureYear,
+                                    mileage = mileage,
+                                    emissionStandard = EmissionStandard.valueOf(emissionStandard),
+                                    imageUri = imageUri
+                                )
+
+                                viewModel.updateListing(newListing)
+
+                                navController.navigate("listings_list")
+                            }
+                        ) {
+                            Text("Update")
+                        }
+                    },
+                    dismissButton = {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(Colors.mediumGray),
+                            onClick = {
+                                updateDialogOpened.value = false
                             }
                         ) {
                             Text("Cancel")
@@ -215,10 +281,10 @@ fun AddListingComponent(
             value = brand,
             options = CarData.CarBrands,
             onChange = {
-                newBrand -> run {
-                    brand = newBrand
-                    model = ""
-                }
+                    newBrand -> run {
+                brand = newBrand
+                model = ""
+            }
             },
             label = "Brand",
             textFieldModifier = defaultModifier,
@@ -381,12 +447,12 @@ fun AddListingComponent(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Colors.red),
+                colors = ButtonDefaults.buttonColors(containerColor = Colors.mediumGray),
                 onClick = {
                     discardChangesDialogOpened.value = true
                 }
             ) {
-                Text("Discard")
+                Text("Cancel")
             }
 
             Button(
@@ -412,14 +478,11 @@ fun AddListingComponent(
                         validationErrorDialogOpened.value = true
                     }
                     else {
-                        viewModel.addListing(newListing)
-
-                        navController.navigate("listings_list")
+                        updateDialogOpened.value = true
                     }
-
                 }
             ) {
-                Text("Post listing")
+                Text("Update listing")
             }
         }
     }
