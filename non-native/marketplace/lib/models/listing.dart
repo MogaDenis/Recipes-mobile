@@ -32,6 +32,12 @@ class Listing {
   EmissionStandard emissionStandard = EmissionStandard.Non_euro;
   String? imagePath;
 
+  String get conditionToString => condition.toString().split('.').last;
+  String get fuelTypeToString => fuelType.toString().split('.').last;
+  String get bodyStyleToString => bodyStyle.toString().split('.').last;
+  String get emissionStandardToString =>
+      emissionStandard.toString().split('.').last;
+
   factory Listing.fromJson(Map<String, dynamic> data) {
     final listingId = data['listingId'] as int;
     final title = data['title'] as String;
