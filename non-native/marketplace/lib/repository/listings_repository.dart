@@ -72,7 +72,7 @@ class ListingRepository with ChangeNotifier {
 
   void addListing(Listing listing) {
     listing.listingId = nextId++;
-    _listings.add(listing);
+    _listings.insert(0, listing);
 
     _saveListings();
   }
