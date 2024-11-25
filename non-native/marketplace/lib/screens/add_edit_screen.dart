@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:marketplace/constants/car_data.dart';
+import 'package:marketplace/widgets/dropdown_menu_widget.dart';
 import 'package:marketplace/widgets/top_app_bar.dart';
 import 'package:marketplace/enums/enums.dart';
 import 'package:marketplace/models/listing.dart';
@@ -39,11 +42,12 @@ class _AddEditScreen extends State<AddEditScreen> {
     _description = widget.listing?.description ?? '';
     _price = widget.listing?.price ?? 0;
     _condition = widget.listing?.condition ?? Condition.New;
-    _brand = widget.listing?.brand ?? '';
-    _model = widget.listing?.model ?? '';
+    _brand = widget.listing?.brand ?? CarData.carBrands[0];
+    _model =
+        widget.listing?.model ?? CarData.carModels[CarData.carBrands[0]]![0];
     _fuelType = widget.listing?.fuelType ?? FuelType.Diesel;
     _bodyStyle = widget.listing?.bodyStyle ?? BodyStyle.Sedan;
-    _colour = widget.listing?.colour ?? '';
+    _colour = widget.listing?.colour ?? CarData.colours[0];
     _manufactureYear = widget.listing?.manufactureYear ?? 2000;
     _mileage = widget.listing?.mileage ?? 0;
     _emissionStandard =
@@ -93,36 +97,257 @@ class _AddEditScreen extends State<AddEditScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                initialValue: _title,
-                decoration: const InputDecoration(labelText: 'Title'),
-                onSaved: (value) => _title = value!,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Cancel'),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  initialValue: _title,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                  onChanged: (value) => _title = value,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  child: DropdownMenuWidget(
+                      label: "Brand",
+                      value: _brand,
+                      options: CarData.carBrands,
+                      onChanged: (String? value) {
+                        setState(() {
+                          _brand = value!;
+                          _model = CarData.carModels[_brand]![0];
+                        });
+                      }),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  child: DropdownMenuWidget(
+                      label: "Model",
+                      value: _model,
+                      options: CarData.carModels[_brand] ?? [],
+                      onChanged: (String? value) {
+                        setState(() {
+                          _model = value!;
+                        });
+                      }),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: DropdownMenuWidget(
+                          label: "Condition",
+                          value: _condition.toString().split('.').last,
+                          options: Condition.values
+                              .map((e) => e.toString().split('.').last)
+                              .toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              _condition = Condition.values.firstWhere(
+                                  (e) => e.toString() == 'Condition.${value!}');
+                            });
+                          }),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 1,
+                      child: TextFormField(
+                        initialValue: _price != 0 ? _price.toString() : "",
+                        decoration: const InputDecoration(labelText: 'Price'),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _price = int.tryParse(value) ?? 0;
+                          });
+                        },
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              int.tryParse(value) == null) {
+                            return 'Please enter a valid price';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: DropdownMenuWidget(
+                          label: "Body",
+                          value: _bodyStyle.toString().split('.').last,
+                          options: BodyStyle.values
+                              .map((e) => e.toString().split('.').last)
+                              .toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              _bodyStyle = BodyStyle.values.firstWhere(
+                                  (e) => e.toString() == 'BodyStyle.${value!}');
+                            });
+                          }),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 1,
+                      child: DropdownMenuWidget(
+                          label: "Fuel",
+                          value: _fuelType.toString().split('.').last,
+                          options: FuelType.values
+                              .map((e) => e.toString().split('.').last)
+                              .toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              _fuelType = FuelType.values.firstWhere(
+                                  (e) => e.toString() == 'FuelType.${value!}');
+                            });
+                          }),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: DropdownMenuWidget(
+                          label: "Colour",
+                          value: _colour,
+                          options: CarData.colours,
+                          onChanged: (String? value) {
+                            setState(() {
+                              _colour = value!;
+                            });
+                          }),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 1,
+                      child: DropdownMenuWidget(
+                          label: "Manufacture year",
+                          value: _manufactureYear.toString(),
+                          options: CarData.yearsList
+                              .map((e) => e.toString())
+                              .toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              _manufactureYear = int.tryParse(value!) ?? 2000;
+                            });
+                          }),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: TextFormField(
+                        initialValue: _mileage != 0 ? _price.toString() : "",
+                        decoration: const InputDecoration(labelText: 'Mileage'),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _mileage = int.tryParse(value) ?? 0;
+                          });
+                        },
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              int.tryParse(value) == null) {
+                            return 'Please enter a valid mileage';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 1,
+                      child: DropdownMenuWidget(
+                          label: "Emission standard",
+                          value: _emissionStandard.toString().split('.').last,
+                          options: EmissionStandard.values
+                              .map((e) => e.toString().split('.').last)
+                              .toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              _emissionStandard = EmissionStandard.values
+                                  .firstWhere((e) =>
+                                      e.toString() ==
+                                      'EmissionStandard.${value!}');
+                            });
+                          }),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.newline,
+                  initialValue: _description,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    alignLabelWithHint: true,
                   ),
-                  ElevatedButton(
-                    onPressed: _saveForm,
-                    child: const Text('Save'),
-                  ),
-                ],
-              ),
-            ],
+                  onChanged: (value) => _description = value,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: const Text("Discard changes?"),
+                                  content:
+                                      const Text("Your changes will be lost"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, "Cancel"),
+                                        child: const Text("Cancel")),
+                                    TextButton(
+                                        onPressed: () => {
+                                              Navigator.pop(context, "Discard"),
+                                              Navigator.of(context).pop()
+                                            },
+                                        child: const Text("Discard")),
+                                  ],
+                                ));
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      onPressed: _saveForm,
+                      child: const Text('Save'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
