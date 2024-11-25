@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:marketplace/constants/car_data.dart';
 import 'package:marketplace/widgets/dropdown_menu_widget.dart';
 import 'package:marketplace/widgets/top_app_bar.dart';
@@ -19,6 +22,7 @@ class AddEditScreen extends StatefulWidget {
 
 class _AddEditScreen extends State<AddEditScreen> {
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
 
   late String _title;
   late String _description;
@@ -33,6 +37,22 @@ class _AddEditScreen extends State<AddEditScreen> {
   late int _mileage;
   late EmissionStandard _emissionStandard;
   late String? _imagePath;
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imagePath = pickedFile.path;
+      });
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _imagePath = null;
+    });
+  }
 
   @override
   void initState() {
@@ -83,7 +103,7 @@ class _AddEditScreen extends State<AddEditScreen> {
         listingsProvider.addListing(newListing);
       }
 
-      Navigator.of(context).pop();
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
 
@@ -100,6 +120,41 @@ class _AddEditScreen extends State<AddEditScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                Card(
+                  elevation: 4,
+                  child: SizedBox(
+                    height: 150,
+                    width: double.infinity,
+                    child: _imagePath == null
+                        ? Center(
+                            child: TextButton(
+                              onPressed: _pickImage,
+                              child: const Text("Choose Image"),
+                            ),
+                          )
+                        : Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.file(
+                                File(_imagePath!),
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.red,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.close,
+                                        color: Colors.white),
+                                    onPressed: _removeImage,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                  ),
+                ),
                 TextFormField(
                   initialValue: _title,
                   decoration: const InputDecoration(labelText: 'Title'),
