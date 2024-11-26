@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:marketplace/constants/car_data.dart';
+import 'package:marketplace/widgets/bottom_nav_bar.dart';
 import 'package:marketplace/widgets/dropdown_menu_widget.dart';
 import 'package:marketplace/widgets/top_app_bar.dart';
 import 'package:marketplace/enums/enums.dart';
@@ -135,15 +136,24 @@ class _AddEditScreen extends State<AddEditScreen> {
                         : Stack(
                             fit: StackFit.expand,
                             children: [
-                              Image.file(
-                                File(_imagePath!),
-                                fit: BoxFit.cover,
-                              ),
+                              File(_imagePath!).existsSync()
+                                  ? Image.file(
+                                      File(_imagePath!),
+                                      height: 180,
+                                      width: double.infinity,
+                                      fit: BoxFit.fitHeight,
+                                    )
+                                  : Image.asset(
+                                      _imagePath!,
+                                      height: 180,
+                                      width: double.infinity,
+                                      fit: BoxFit.fitHeight,
+                                    ),
                               Positioned(
                                 top: 8,
                                 right: 8,
                                 child: CircleAvatar(
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: Colors.grey,
                                   child: IconButton(
                                     icon: const Icon(Icons.close,
                                         color: Colors.white),
@@ -372,6 +382,11 @@ class _AddEditScreen extends State<AddEditScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 120, 120, 120),
+                        foregroundColor: Colors.white,
+                      ),
                       onPressed: () {
                         showDialog(
                             context: context,
@@ -396,6 +411,10 @@ class _AddEditScreen extends State<AddEditScreen> {
                       child: const Text('Cancel'),
                     ),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 71, 70, 70),
+                        foregroundColor: Colors.white,
+                      ),
                       onPressed: _saveForm,
                       child: const Text('Save'),
                     ),
@@ -406,6 +425,7 @@ class _AddEditScreen extends State<AddEditScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

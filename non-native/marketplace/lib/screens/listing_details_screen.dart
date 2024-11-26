@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:marketplace/models/listing.dart';
 import 'package:marketplace/providers/listings_provider.dart';
 import 'package:marketplace/screens/add_edit_screen.dart';
+import 'package:marketplace/widgets/bottom_nav_bar.dart';
 import 'package:marketplace/widgets/top_app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +29,11 @@ class ListingDetailsScreen extends StatelessWidget {
             children: [
               Card(
                 child: listing.imagePath == null
-                    ? const Text('No image')
+                    ? const SizedBox(
+                        height: 180,
+                        width: double.infinity,
+                        child: Center(child: Text('No image')),
+                      )
                     : ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: File(listing.imagePath!).existsSync()
@@ -149,17 +154,19 @@ class ListingDetailsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Text(
-                'More about the vehicle:',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '\t\t${listing.description}',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
+              if (listing.description.isNotEmpty) ...[
+                Text(
+                  'More about the vehicle:',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '\t\t${listing.description}',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -204,6 +211,7 @@ class ListingDetailsScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

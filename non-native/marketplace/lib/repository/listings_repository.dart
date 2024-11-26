@@ -1,43 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:marketplace/enums/enums.dart';
 import 'package:marketplace/models/listing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListingRepository with ChangeNotifier {
-  final List<Listing> _listings = [
-    Listing(
-        listingId: 1,
-        title: "Seat Exeo for sale",
-        description: "Good car",
-        price: 4000,
-        condition: Condition.Good,
-        brand: "Seat",
-        model: "Exeo",
-        fuelType: FuelType.Diesel,
-        bodyStyle: BodyStyle.Wagon,
-        colour: "Blue",
-        manufactureYear: 2010,
-        mileage: 183000,
-        emissionStandard: EmissionStandard.Euro_5,
-        imagePath: "assets/images/seat_exeo.jpg"),
-    Listing(
-        listingId: 2,
-        title: "BMW M3 G80",
-        description: "Brand new car, high performance sedan",
-        price: 88000,
-        condition: Condition.New,
-        brand: "BMW",
-        model: "3-series",
-        fuelType: FuelType.Petrol,
-        bodyStyle: BodyStyle.Sedan,
-        colour: "Green",
-        manufactureYear: 2023,
-        mileage: 14,
-        emissionStandard: EmissionStandard.Euro_6,
-        imagePath: "assets/images/bmw_g80.jpg"),
-  ];
+  final List<Listing> _listings = [];
 
   List<Listing> get listings => _listings;
   int nextId = 0;

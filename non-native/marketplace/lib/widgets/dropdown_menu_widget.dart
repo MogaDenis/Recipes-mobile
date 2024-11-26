@@ -25,7 +25,7 @@ class _DropdownMenuState extends State<DropdownMenuWidget> {
       value: widget.value,
       icon: const Icon(Icons.arrow_drop_down),
       elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
+      style: const TextStyle(color: Colors.black),
       onChanged: widget.onChanged,
       items: widget.options.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(

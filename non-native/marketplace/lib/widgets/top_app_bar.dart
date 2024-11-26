@@ -12,7 +12,7 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
       ),
-      backgroundColor: const Color(0xFFBDBDBD),
+      backgroundColor: const Color.fromARGB(255, 178, 177, 175),
     );
   }
 

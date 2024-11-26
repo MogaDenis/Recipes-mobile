@@ -29,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
             return ListingListItem(listing: listing);
           },
         ),
-        bottomNavigationBar: const BottomNavBar());
+        bottomNavigationBar: const BottomNavBar(
+          isOnHomeScreen: true,
+        ));
   }
 }

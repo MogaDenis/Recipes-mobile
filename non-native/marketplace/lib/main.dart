@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'Marketplace',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(222, 236, 229, 217)),
         useMaterial3: true,
       ),
       home: const HomeScreen(),
