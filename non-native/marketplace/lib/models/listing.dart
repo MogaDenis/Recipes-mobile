@@ -61,7 +61,7 @@ class Listing {
     final emissionStandard = data['emissionStandard'] != null
         ? EmissionStandard.values[data['emissionStandard']]
         : EmissionStandard.values[data['EmissionStandard']];
-    final imagePath = data['imagePath'] as String?;
+    final imagePath = data['imagePath'] ?? data['ImagePath'] as String?;
 
     return Listing(
         listingId: listingId,

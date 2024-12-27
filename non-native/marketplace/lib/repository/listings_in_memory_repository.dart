@@ -41,13 +41,11 @@ class ListingInMemoryRepository extends ListingsRepository {
   }
 
   @override
-  Future<int> addListing(Listing listing) async {
+  Future<void> addListing(Listing listing) async {
     listing.listingId = _nextId;
     _listings.insert(0, listing);
 
     _saveListings();
-
-    return _nextId++;
   }
 
   @override

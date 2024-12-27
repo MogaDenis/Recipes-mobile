@@ -29,7 +29,6 @@ class ListingsProvider with ChangeNotifier {
     channel.stream.listen((message) {
       final data = jsonDecode(message);
 
-      print('RECEIVED:${data['Data']}');
       final action = data['Action'];
       final Listing listing = Listing.fromJson(data['Data']);
 

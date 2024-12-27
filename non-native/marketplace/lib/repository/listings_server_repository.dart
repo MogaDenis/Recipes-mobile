@@ -21,7 +21,7 @@ class ListingsServerRepository extends ListingsRepository {
   }
 
   @override
-  Future<int> addListing(Listing listing) async {
+  Future<void> addListing(Listing listing) async {
     final response = await http.post(Uri.parse(baseURI),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(listing.toJson()));
@@ -29,9 +29,6 @@ class ListingsServerRepository extends ListingsRepository {
     if (response.statusCode != 200) {
       throw Exception("Failed to add listing!");
     }
-
-    dynamic jsonData = jsonDecode(response.body);
-    return jsonData['listingId'];
   }
 
   @override
