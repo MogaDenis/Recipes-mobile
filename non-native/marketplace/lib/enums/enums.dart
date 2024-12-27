@@ -7,7 +7,7 @@ enum BodyStyle { Sedan, Wagon, Coupe, Convertible }
 enum EmissionStandard {
   Non_euro,
   Euro_1,
-  Euro2,
+  Euro_2,
   Euro_3,
   Euro_4,
   Euro_5,

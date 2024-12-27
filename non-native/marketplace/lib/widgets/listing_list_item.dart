@@ -60,7 +60,7 @@ class ListingListItem extends StatelessWidget {
                         const SizedBox(height: 5),
                         Text("Fuel: ${listing.fuelTypeToString}"),
                         const SizedBox(height: 5),
-                        Text("Fuel: ${listing.bodyStyleToString}"),
+                        Text("Body style: ${listing.bodyStyleToString}"),
                         const SizedBox(height: 5),
                         Text("Mileage: ${listing.mileage} km"),
                         const SizedBox(height: 5),

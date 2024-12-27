@@ -76,7 +76,7 @@ class _AddEditScreen extends State<AddEditScreen> {
     _imagePath = widget.listing?.imagePath;
   }
 
-  void _saveForm() {
+  void _saveForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       final listingsProvider =
@@ -99,9 +99,9 @@ class _AddEditScreen extends State<AddEditScreen> {
 
       if (widget.listing != null) {
         newListing.listingId = widget.listing!.listingId;
-        listingsProvider.updateListing(newListing);
+        await listingsProvider.updateListing(newListing);
       } else {
-        listingsProvider.addListing(newListing);
+        await listingsProvider.addListing(newListing);
       }
 
       Navigator.of(context).popUntil((route) => route.isFirst);

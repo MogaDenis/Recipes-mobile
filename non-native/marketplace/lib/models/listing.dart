@@ -39,31 +39,28 @@ class Listing {
       emissionStandard.toString().split('.').last;
 
   factory Listing.fromJson(Map<String, dynamic> data) {
-    final listingId = data['listingId'] as int;
-    final title = data['title'] as String;
-    final description = data['description'] as String;
-    final price = data['price'] as int;
-    final condition = Condition.values.firstWhere(
-      (e) => e.toString() == 'Condition.${data['condition']}',
-      orElse: () => Condition.New,
-    );
-    final brand = data['brand'] as String;
-    final model = data['model'] as String;
-    final fuelType = FuelType.values.firstWhere(
-      (e) => e.toString() == 'FuelType.${data['fuelType']}',
-      orElse: () => FuelType.Diesel,
-    );
-    final bodyStyle = BodyStyle.values.firstWhere(
-      (e) => e.toString() == 'BodyStyle.${data['bodyStyle']}',
-      orElse: () => BodyStyle.Sedan,
-    );
-    final colour = data['colour'] as String;
-    final manufactureYear = data['manufactureYear'] as int;
-    final mileage = data['mileage'] as int;
-    final emissionStandard = EmissionStandard.values.firstWhere(
-      (e) => e.toString() == 'EmissionStandard.${data['emissionStandard']}',
-      orElse: () => EmissionStandard.Non_euro,
-    );
+    final listingId = data['listingId'] ?? data['ListingId'] as int;
+    final title = data['title'] ?? data['Title'] as String;
+    final description = data['description'] ?? data['Description'] as String;
+    final price = data['price'] ?? data['Price'] as int;
+    final condition = data['condition'] != null
+        ? Condition.values[data['condition']]
+        : Condition.values[data['Condition']];
+    final brand = data['brand'] ?? data['Brand'] as String;
+    final model = data['model'] ?? data['Model'] as String;
+    final fuelType = data['fuelType'] != null
+        ? FuelType.values[data['fuelType']]
+        : FuelType.values[data['FuelType']];
+    final bodyStyle = data['bodyStyle'] != null
+        ? BodyStyle.values[data['bodyStyle']]
+        : BodyStyle.values[data['BodyStyle']];
+    final colour = data['colour'] ?? data['Colour'] as String;
+    final manufactureYear =
+        data['manufactureYear'] ?? data['ManufactureYear'] as int;
+    final mileage = data['mileage'] ?? data['Mileage'] as int;
+    final emissionStandard = data['emissionStandard'] != null
+        ? EmissionStandard.values[data['emissionStandard']]
+        : EmissionStandard.values[data['EmissionStandard']];
     final imagePath = data['imagePath'] as String?;
 
     return Listing(
@@ -89,15 +86,15 @@ class Listing {
       'title': title,
       'description': description,
       'price': price,
-      'condition': condition.toString().split('.').last,
+      'condition': condition.index,
       'brand': brand,
       'model': model,
-      'fuelType': fuelType.toString().split('.').last,
-      'bodyStyle': bodyStyle.toString().split('.').last,
+      'fuelType': fuelType.index,
+      'bodyStyle': bodyStyle.index,
       'colour': colour,
       'manufactureYear': manufactureYear,
       'mileage': mileage,
-      'emissionStandard': emissionStandard.toString().split('.').last,
+      'emissionStandard': emissionStandard.index,
       'imagePath': imagePath
     };
   }

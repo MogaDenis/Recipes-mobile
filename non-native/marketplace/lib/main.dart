@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:marketplace/providers/listings_provider.dart';
+import 'package:marketplace/repository/listings_server_repository.dart';
 import 'package:marketplace/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final listingsProvider = ListingsProvider();
+  final listingsProvider = ListingsProvider(ListingsServerRepository());
   await listingsProvider.init();
 
   runApp(ChangeNotifierProvider.value(
