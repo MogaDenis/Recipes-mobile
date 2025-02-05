@@ -19,10 +19,6 @@ class RecipesProvider with ChangeNotifier {
     recipes = await _recipesRepository.loadRecipes();
   }
 
-  void connectToWebSocket() {
-    _connectToWebSocket();
-  }
-
   List<Pair<String, double>> getTopCategoriesByRating(int topCount) {
     Set<String> categories = {};
     for (Recipe recipe in recipes) {
@@ -93,9 +89,9 @@ class RecipesProvider with ChangeNotifier {
     return averageRatings;
   }
 
-  void _connectToWebSocket() {
+  void connectToWebSocket() {
     final channel =
-        WebSocketChannel.connect(Uri.parse('ws://localhost:2528/ws'));
+        WebSocketChannel.connect(Uri.parse('ws://192.168.100.54:2528/ws'));
 
     channel.stream.listen((message) {
       final data = jsonDecode(message);
@@ -114,6 +110,7 @@ class RecipesProvider with ChangeNotifier {
   Future<void> addRecipe(Recipe recipe) async {
     await _recipesRepository.addRecipe(recipe);
 
+    // The following are handled by the websocket
     // recipes.insert(0, recipe);
     // notifyListeners();
   }

@@ -21,7 +21,10 @@ class Recipe {
     final title = data['title'] ?? data['Title'] as String;
     final ingredients = data['ingredients'] ?? data['ingredients'] as String;
     final category = data['category'] ?? data['category'] as String;
-    final rating = data['rating'] ?? data['rating'] as double;
+
+    final dynamic rawRating = data['rating'];
+    final double rating =
+        rawRating is int ? rawRating.toDouble() : rawRating as double;
 
     return Recipe(
       id: id,

@@ -5,10 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:recipes/models/recipe.dart';
 
 class RecipesRepository {
-  final baseURI = "http://localhost:2528";
+  final baseURI = "http://192.168.100.54:2528";
 
   Future<List<Recipe>> loadRecipes() async {
-    final response = await http.get(Uri.parse("$baseURI/recipes"));
+    final response = await http
+        .get(Uri.parse("$baseURI/recipes"))
+        .timeout(const Duration(seconds: 3), onTimeout: () {
+      throw Exception("Couldn't communicate with the server.");
+    });
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = jsonDecode(response.body);
@@ -20,9 +24,13 @@ class RecipesRepository {
   }
 
   Future<void> addRecipe(Recipe recipe) async {
-    final response = await http.post(Uri.parse("$baseURI/recipe"),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(recipe.toJson()));
+    final response = await http
+        .post(Uri.parse("$baseURI/recipe"),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(recipe.toJson()))
+        .timeout(const Duration(seconds: 3), onTimeout: () {
+      throw Exception("Couldn't communicate with the server.");
+    });
 
     if (response.statusCode != 201) {
       debugPrint("Failed to add recipe!");
@@ -33,9 +41,13 @@ class RecipesRepository {
   }
 
   Future<void> updateRecipe(Recipe recipe) async {
-    final response = await http.put(Uri.parse("$baseURI/recipe/${recipe.id}"),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(recipe.toJson()));
+    final response = await http
+        .put(Uri.parse("$baseURI/recipe/${recipe.id}"),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(recipe.toJson()))
+        .timeout(const Duration(seconds: 3), onTimeout: () {
+      throw Exception("Couldn't communicate with the server.");
+    });
 
     if (response.statusCode != 200) {
       debugPrint("Failed to update recipe!");
@@ -46,7 +58,11 @@ class RecipesRepository {
   }
 
   Future<void> deleteRecipe(int id) async {
-    final response = await http.delete(Uri.parse("$baseURI/recipe/$id"));
+    final response = await http
+        .delete(Uri.parse("$baseURI/recipe/$id"))
+        .timeout(const Duration(seconds: 3), onTimeout: () {
+      throw Exception("Couldn't communicate with the server.");
+    });
 
     if (response.statusCode != 200) {
       debugPrint("Failed to remove recipe!");
